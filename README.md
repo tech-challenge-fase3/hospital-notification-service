@@ -55,3 +55,4 @@ Para compilar sem executar testes:
 ```bash
 ./mvnw -DskipTests clean compile
 ```
+# hospital-history-service

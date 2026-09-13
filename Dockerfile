@@ -7,10 +7,12 @@ COPY hospital-notification-service/mvnw hospital-notification-service/mvnw
 COPY hospital-notification-service/src hospital-notification-service/src
 RUN chmod +x hospital-notification-service/mvnw \
     && ./hospital-notification-service/mvnw -f hospital-notification-service/pom.xml clean package -DskipTests \
-    && cp /workspace/hospital-notification-service/target/notification-service-0.0.1-SNAPSHOT.jar /workspace/app.jar
+    && cd hospital-notification-service/target \
+    && jar xf app.jar META-INF/MANIFEST.MF \
+    && grep -q 'Main-Class: org.springframework.boot.loader.launch.JarLauncher' META-INF/MANIFEST.MF
 
 FROM eclipse-temurin:25-jre
 WORKDIR /app
-COPY --from=build /workspace/app.jar /app/app.jar
+COPY --from=build /workspace/hospital-notification-service/target/app.jar /app/app.jar
 EXPOSE 8082
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
